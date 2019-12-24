@@ -7,8 +7,8 @@ class UserController {
     const emailInUse =
       (await User.count({
         where: Sequelize.where(
-          Sequelize.fn('lower', Sequelize.col('email')),
-          Sequelize.fn('lower', req.body.email)
+          Sequelize.fn('LOWER', Sequelize.col('email')),
+          Sequelize.fn('LOWER', req.body.email)
         ),
       })) === 1;
 
@@ -21,8 +21,8 @@ class UserController {
     const nickInUse =
       (await User.count({
         where: Sequelize.where(
-          Sequelize.fn('lower', Sequelize.col('nickname')),
-          Sequelize.fn('lower', req.body.nickname)
+          Sequelize.fn('LOWER', Sequelize.col('nickname')),
+          Sequelize.fn('LOWER', req.body.nickname)
         ),
       })) === 1;
 
