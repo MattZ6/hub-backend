@@ -1,9 +1,34 @@
 import Sequelize from 'sequelize';
+import * as Yup from 'yup';
 
 import User from '../models/User';
 
 class UserController {
+  async show(req, res) {
+    const user = await User.findByPk(req.userId, {
+      attributes: ['id', 'name', 'nickname', 'email'],
+    });
+
+    res.json(user);
+  }
+
   async store(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string()
+        .required()
+        .min(6),
+      email: Yup.string()
+        .email()
+        .required(),
+      password: Yup.string()
+        .required()
+        .min(6),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation errors.' });
+    }
+
     const emailInUse =
       (await User.count({
         where: Sequelize.where(
@@ -38,6 +63,24 @@ class UserController {
   }
 
   async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string().min(6),
+      email: Yup.string().email(),
+      oldPassword: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('oldPassword', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      passwordConfirmation: Yup.string().when('password', (password, field) =>
+        password ? field.required().oneOf([Yup.ref('password')]) : field
+      ),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation errors.' });
+    }
+
     const { email, oldPassword } = req.body;
 
     const user = await User.findByPk(req.userId);
