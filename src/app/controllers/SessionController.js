@@ -24,9 +24,16 @@ class SessionController {
     }
 
     return res.json({
-      access_token: jwt.sign({ id: user.id }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn,
-      }),
+      access_token: jwt.sign(
+        {
+          id: user.id,
+          admin: user.admin,
+        },
+        authConfig.secret,
+        {
+          expiresIn: authConfig.expiresIn,
+        }
+      ),
     });
   }
 }
