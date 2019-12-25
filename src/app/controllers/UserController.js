@@ -9,31 +9,48 @@ class UserController {
       attributes: ['id', 'name', 'nickname', 'email'],
     });
 
-    res.json(user);
+    if (!user) {
+      return res.status(401).json({ error: 'User not found.' });
+    }
+
+    return res.json(user);
   }
 
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string()
         .required()
+        .trim()
         .min(6),
+      nickname: Yup.string()
+        .required()
+        .trim()
+        .min(3),
       email: Yup.string()
         .email()
         .required(),
       password: Yup.string()
         .required()
+        .trim()
         .min(6),
+      passwordConfirmation: Yup.string()
+        .required()
+        .oneOf([Yup.ref('password')]),
     });
 
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation errors.' });
     }
 
+    const name = req.body.name.trim();
+    const nickname = req.body.nickname.trim();
+    const email = req.body.email.trim();
+
     const emailInUse =
       (await User.count({
         where: Sequelize.where(
           Sequelize.fn('LOWER', Sequelize.col('email')),
-          Sequelize.fn('LOWER', req.body.email)
+          Sequelize.fn('LOWER', email)
         ),
       })) === 1;
 
@@ -47,7 +64,7 @@ class UserController {
       (await User.count({
         where: Sequelize.where(
           Sequelize.fn('LOWER', Sequelize.col('nickname')),
-          Sequelize.fn('LOWER', req.body.nickname)
+          Sequelize.fn('LOWER', nickname)
         ),
       })) === 1;
 
@@ -57,15 +74,24 @@ class UserController {
       });
     }
 
-    await User.create(req.body);
+    await User.create({
+      name,
+      nickname,
+      email,
+      password: req.body.password,
+    });
 
     return res.status(201).json();
   }
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().min(6),
-      email: Yup.string().email(),
+      name: Yup.string()
+        .trim()
+        .min(6),
+      email: Yup.string()
+        .trim()
+        .email(),
       oldPassword: Yup.string().min(6),
       password: Yup.string()
         .min(6)
@@ -84,6 +110,10 @@ class UserController {
     const { email, oldPassword } = req.body;
 
     const user = await User.findByPk(req.userId);
+
+    if (!user) {
+      return res.status(401).json({ error: 'User not found.' });
+    }
 
     if (email && email !== user.email) {
       const userExists = await User.findOne({

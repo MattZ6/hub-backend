@@ -6,9 +6,9 @@ import authConfig from '../../config/auth';
 export default async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  const message = 'Unauthorized to access this resource.';
+  const error = 'Unauthorized to access this resource.';
 
-  if (!authHeader) return res.status(401).json({ message });
+  if (!authHeader) return res.status(401).json({ error });
 
   const [, token] = authHeader.split(' ');
 
@@ -16,10 +16,10 @@ export default async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, authConfig.secret);
 
     req.userId = decoded.id;
-    req.userAdmin = decoded.admin;
+    req.userAdmin = decoded.data;
 
     return next();
-  } catch (error) {
-    return res.status(401).json({ message });
+  } catch (err) {
+    return res.status(401).json({ error });
   }
 };
