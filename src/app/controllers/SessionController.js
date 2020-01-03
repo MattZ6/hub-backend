@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import { where, fn, col } from 'sequelize';
 import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
@@ -25,10 +25,7 @@ class SessionController {
     const { email, password } = req.body;
 
     const user = await User.findOne({
-      where: Sequelize.where(
-        Sequelize.fn('LOWER', Sequelize.col('email')),
-        Sequelize.fn('LOWER', email)
-      ),
+      where: where(fn('LOWER', col('email')), fn('LOWER', email)),
       attributes: ['id', 'name', 'admin', 'password_hash'],
     });
 

@@ -1,19 +1,20 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('instruments', {
+    return queryInterface.createTable('instrument_user_skills', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'users', key: 'id' },
         allowNull: false,
-        unique: true,
       },
-      label: {
-        type: Sequelize.STRING,
+      instrument_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'instruments', key: 'id' },
         allowNull: false,
       },
       created_at: {
@@ -28,6 +29,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('instruments');
+    return queryInterface.dropTable('instrument_user_skills');
   },
 };

@@ -25,6 +25,13 @@ class User extends Model {
     return this;
   }
 
+  static associate(models) {
+    this.hasMany(models.InstrumentUserSkill, {
+      as: 'skills',
+      foreignKey: 'user_id',
+    });
+  }
+
   checkPassword(password) {
     return compare(password, this.password_hash);
   }

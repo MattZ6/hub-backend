@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import { where, fn, col } from 'sequelize';
 import * as Yup from 'yup';
 
 import User from '../models/User';
@@ -48,10 +48,7 @@ class UserController {
 
     const emailInUse =
       (await User.count({
-        where: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('email')),
-          Sequelize.fn('LOWER', email)
-        ),
+        where: where(fn('LOWER', col('email')), fn('LOWER', email)),
       })) === 1;
 
     if (emailInUse) {
@@ -62,10 +59,7 @@ class UserController {
 
     const nickInUse =
       (await User.count({
-        where: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('nickname')),
-          Sequelize.fn('LOWER', nickname)
-        ),
+        where: where(fn('LOWER', col('nickname')), fn('LOWER', nickname)),
       })) === 1;
 
     if (nickInUse) {
@@ -117,10 +111,7 @@ class UserController {
 
     if (email && email !== user.email) {
       const userExists = await User.findOne({
-        where: Sequelize.where(
-          Sequelize.fn('LOWER', Sequelize.col('email')),
-          Sequelize.fn('LOWER', email)
-        ),
+        where: where(fn('LOWER', col('email')), fn('LOWER', email)),
       });
 
       if (userExists)

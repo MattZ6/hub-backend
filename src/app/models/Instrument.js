@@ -5,6 +5,7 @@ class Instrument extends Model {
     super.init(
       {
         name: Sequelize.STRING,
+        label: Sequelize.STRING,
       },
       {
         sequelize,
@@ -12,6 +13,13 @@ class Instrument extends Model {
     );
 
     return this;
+  }
+
+  static associate(models) {
+    this.hasMany(models.InstrumentUserSkill, {
+      as: 'skills',
+      foreignKey: 'instrument_id',
+    });
   }
 }
 
