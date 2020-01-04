@@ -6,6 +6,7 @@ import UserSkill from '../app/models/UserSkill';
 import MusicStyle from '../app/models/MusicStyle';
 import UserStylePreference from '../app/models/UserStylePreference';
 import Band from '../app/models/Band';
+import BandStyle from '../app/models/BandStyle';
 
 import databaseConfig from '../config/database';
 
@@ -16,6 +17,7 @@ const models = [
   MusicStyle,
   UserStylePreference,
   Band,
+  BandStyle,
 ];
 
 class Database {

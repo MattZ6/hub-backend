@@ -37,11 +37,7 @@ class UserStylePreferenceController {
 
     const invalidStyle =
       (await MusicStyle.count({
-        where: {
-          id: {
-            [Op.in]: styles,
-          },
-        },
+        where: { id: { [Op.in]: styles } },
       })) !== styles.length;
 
     if (invalidStyle)

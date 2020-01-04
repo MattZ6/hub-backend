@@ -16,6 +16,7 @@ class Band extends Model {
 
   static associate(models) {
     this.belongsTo(models.User, { foreignKey: 'leader_id', as: 'leader' });
+    this.hasMany(models.BandStyle, { as: 'styles' });
   }
 }
 

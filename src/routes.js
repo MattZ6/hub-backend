@@ -8,6 +8,7 @@ import MusicianController from './app/controllers/MusicianController';
 import StyleController from './app/controllers/StyleController';
 import UserStylePreferenceController from './app/controllers/UserStylePreferenceController';
 import BandController from './app/controllers/BandController';
+import BandStyleController from './app/controllers/BandStyleController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminMiddleware from './app/middlewares/admin';
@@ -48,6 +49,9 @@ routes.get('/v1/bands', BandController.index);
 routes.post('/v1/bands', BandController.store);
 routes.put('/v1/bands/:id', BandController.update);
 routes.delete('/v1/bands/:id', BandController.destroy);
+
+routes.post('/v1/bands/:bandId/styles', BandStyleController.store);
+routes.delete('/v1/bands/:bandId/styles/:id', BandStyleController.delete);
 
 /**
  * Admin routes
