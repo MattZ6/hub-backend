@@ -17,6 +17,10 @@ module.exports = {
         references: { model: 'instruments', key: 'id' },
         allowNull: false,
       },
+      skill_level: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,

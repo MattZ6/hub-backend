@@ -4,10 +4,12 @@ import InstrumentUserSkill from '../models/InstrumentUserSkill';
 
 class MusicianController {
   async index(req, res) {
-    const { offset = 0, limit = 10 } = req.params;
+    const { limit = 10, offset = 0 } = req.query;
 
     const users = await User.findAll({
       attributes: ['id', 'nickname'],
+      limit,
+      offset,
       include: [
         {
           model: InstrumentUserSkill,
@@ -22,8 +24,6 @@ class MusicianController {
           ],
         },
       ],
-      limit,
-      offset,
     });
 
     return res.status(200).json(users);

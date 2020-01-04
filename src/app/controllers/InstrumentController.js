@@ -49,7 +49,7 @@ class InstrumentController {
 
     await Instrument.create(instrument);
 
-    return res.status(204).json();
+    return res.status(201).json();
   }
 }
 

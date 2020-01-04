@@ -1,11 +1,11 @@
-import Sequelize, { Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 class Instrument extends Model {
   static init(sequelize) {
     super.init(
       {
-        name: Sequelize.STRING,
-        label: Sequelize.STRING,
+        name: DataTypes.STRING,
+        label: DataTypes.STRING(12),
       },
       {
         sequelize,

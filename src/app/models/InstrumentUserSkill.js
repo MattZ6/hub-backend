@@ -1,9 +1,11 @@
-import { Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 class InstrumentUserSkill extends Model {
   static init(sequelize) {
     super.init(
-      {},
+      {
+        skill_level: DataTypes.TINYINT,
+      },
       {
         sequelize,
       }
