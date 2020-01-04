@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 
-class InstrumentUserSkill extends Model {
+class UserSkill extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -23,4 +23,4 @@ class InstrumentUserSkill extends Model {
   }
 }
 
-export default InstrumentUserSkill;
+export default UserSkill;

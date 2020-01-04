@@ -26,8 +26,12 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.InstrumentUserSkill, {
+    this.hasMany(models.UserSkill, {
       as: 'skills',
+      foreignKey: 'user_id',
+    });
+    this.hasMany(models.User, {
+      as: 'style_preferences',
       foreignKey: 'user_id',
     });
   }

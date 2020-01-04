@@ -16,7 +16,7 @@ class Instrument extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.InstrumentUserSkill, {
+    this.hasMany(models.UserSkill, {
       as: 'skills',
       foreignKey: 'instrument_id',
     });
