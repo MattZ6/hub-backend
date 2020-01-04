@@ -3,10 +3,11 @@ import Sequelize from 'sequelize';
 import User from '../app/models/User';
 import Instrument from '../app/models/Instrument';
 import InstrumentUserSkill from '../app/models/InstrumentUserSkill';
+import MusicStyle from '../app/models/MusicStyle';
 
 import databaseConfig from '../config/database';
 
-const models = [User, Instrument, InstrumentUserSkill];
+const models = [User, Instrument, InstrumentUserSkill, MusicStyle];
 
 class Database {
   constructor() {
