@@ -1,6 +1,6 @@
 import User from '../models/User';
 import Instrument from '../models/Instrument';
-import InstrumentUserSkill from '../models/InstrumentUserSkill';
+import UserSkill from '../models/UserSkill';
 
 class MusicianController {
   async index(req, res) {
@@ -12,7 +12,7 @@ class MusicianController {
       offset,
       include: [
         {
-          model: InstrumentUserSkill,
+          model: UserSkill,
           as: 'skills',
           attributes: ['id'],
           include: [

@@ -1,9 +1,9 @@
 import Instrument from '../models/Instrument';
-import InstrumentUserSkill from '../models/InstrumentUserSkill';
+import UserSkill from '../models/UserSkill';
 
 class SkillController {
   async index(req, res) {
-    const skills = await InstrumentUserSkill.findAll({
+    const skills = await UserSkill.findAll({
       where: { user_id: req.userId },
       attributes: ['id', 'skill_level'],
       include: [
@@ -100,15 +100,15 @@ class SkillController {
       });
 
     /**
-     * InstrumentUserSkill
+     * UserSkill
      */
 
     const skillsQuery = `
-                          SELECT instrument_id FROM instrument_user_skills
-                          WHERE instrument_user_skills.user_id = ${req.userId}
+                          SELECT instrument_id FROM user_skills
+                          WHERE user_skills.user_id = ${req.userId}
                         `;
 
-    const [result] = await InstrumentUserSkill.sequelize.query(skillsQuery);
+    const [result] = await UserSkill.sequelize.query(skillsQuery);
 
     const skillsToSave = unique.filter(
       x => result.findIndex(y => y.instrument_id === x.instrumentId) === -1
@@ -123,7 +123,7 @@ class SkillController {
       skill_level: x.skillLevel,
     }));
 
-    await Promise.all(skills.map(skill => InstrumentUserSkill.create(skill)));
+    await Promise.all(skills.map(skill => UserSkill.create(skill)));
 
     return res.status(204).json();
   }
@@ -137,7 +137,7 @@ class SkillController {
       return res.status(422).json({ error: 'Invalid params' });
 
     const exists =
-      (await InstrumentUserSkill.count({
+      (await UserSkill.count({
         where: {
           user_id: req.userId,
           id,
@@ -150,7 +150,7 @@ class SkillController {
       });
     }
 
-    await InstrumentUserSkill.destroy({ where: { id } });
+    await UserSkill.destroy({ where: { id } });
 
     return res.status(204).json();
   }
