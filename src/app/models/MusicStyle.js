@@ -13,6 +13,11 @@ class MusicStyle extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.hasMany(models.UserStylePreference, { as: 'users' });
+    this.hasMany(models.BandStyle, { as: 'bands' });
+  }
 }
 
 export default MusicStyle;
