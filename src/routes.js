@@ -5,6 +5,7 @@ import SessionController from './app/controllers/SessionController';
 import InstrumentController from './app/controllers/InstrumentController';
 import SkillController from './app/controllers/SkillController';
 import MusicianController from './app/controllers/MusicianController';
+import StyleController from './app/controllers/StyleController';
 
 import authMiddleware from './app/middlewares/auth';
 import adminMiddleware from './app/middlewares/admin';
@@ -33,11 +34,15 @@ routes.delete('/v1/skills/:id', SkillController.destroy);
 
 routes.get('/v1/musicians', MusicianController.index);
 
+routes.get('/v1/styles', StyleController.index);
+
 /**
  * Admin routes
  */
 routes.use(adminMiddleware);
 
 routes.post('/v1/instruments', InstrumentController.store);
+
+routes.post('/v1/styles', StyleController.store);
 
 export default routes;
