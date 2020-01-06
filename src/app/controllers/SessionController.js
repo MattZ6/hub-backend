@@ -1,27 +1,13 @@
 import { where, fn, col } from 'sequelize';
-import jwt from 'jsonwebtoken';
-import * as Yup from 'yup';
 
-import authConfig from '../../config/auth';
+import { UserMessages } from '../res/messages';
+
+import returnToken from '../utils/token';
+
 import User from '../models/User';
 
 class SessionController {
   async store(req, res) {
-    const schema = Yup.object().shape({
-      email: Yup.string()
-        .email()
-        .required()
-        .trim(),
-      password: Yup.string()
-        .required()
-        .trim()
-        .min(6),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation errors.' });
-    }
-
     const { email, password } = req.body;
 
     const user = await User.findOne({
@@ -30,24 +16,15 @@ class SessionController {
     });
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found.' });
+      return res.status(404).json({ error: UserMessages.USER_NOT_FOUND });
     }
 
     if (!(await user.checkPassword(password))) {
-      return res.status(401).json({ message: 'Password does not match.' });
+      return res.status(422).json({ error: UserMessages.PASSWORD_WRONG });
     }
 
-    return res.json({
-      access_token: jwt.sign(
-        {
-          id: user.id,
-          data: user.admin,
-        },
-        authConfig.secret,
-        {
-          expiresIn: authConfig.expiresIn,
-        }
-      ),
+    return res.status(201).json({
+      access_token: returnToken(user.id, user.admin),
     });
   }
 }

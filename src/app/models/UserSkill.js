@@ -20,6 +20,8 @@ class UserSkill extends Model {
       foreignKey: 'instrument_id',
       as: 'instrument',
     });
+
+    this.hasMany(models.BandMember, { as: 'bands' });
   }
 }
 
