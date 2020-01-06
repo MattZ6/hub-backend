@@ -1,4 +1,8 @@
 import { Router } from 'express';
+import Brute from 'express-brute';
+import BruteRedis from 'express-brute-redis';
+
+import redisConfig from './config/redis';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
@@ -13,14 +17,25 @@ import BandStyleController from './app/controllers/BandStyleController';
 import authMiddleware from './app/middlewares/auth';
 import adminMiddleware from './app/middlewares/admin';
 
+import validateSessionStore from './app/validators/SessionStore';
+import validateUserStore from './app/validators/UserStore';
+
 const routes = new Router();
+
+const bruteStore = new BruteRedis(redisConfig);
+const bruteForce = new Brute(bruteStore);
 
 /**
  * Public routes
  */
 
-routes.post('/v1/users', UserController.store);
-routes.post('/v1/sessions', SessionController.store);
+routes.post(
+  '/v1/sessions',
+  bruteForce.prevent,
+  validateSessionStore,
+  SessionController.store
+);
+routes.post('/v1/users', validateUserStore, UserController.store);
 
 /**
  * Private routes

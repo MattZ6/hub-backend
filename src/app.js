@@ -1,6 +1,10 @@
 import 'dotenv/config';
 
 import express from 'express';
+import helmet from 'helmet';
+import redis from 'redis';
+import RateLimit from 'express-rate-limit';
+import RateLimitRedis from 'rate-limit-redis';
 // import path from 'path';
 // import Youch from 'youch';
 // import * as Sentry from '@sentry/node';
@@ -8,6 +12,7 @@ import express from 'express';
 // import 'express-async-errors';
 
 // import sentryConfig from './config/sentry';
+import redisConfig from './config/redis';
 
 import routes from './routes';
 
@@ -27,7 +32,20 @@ class App {
   middlewares() {
     // this.server.use(Sentry.Handlers.requestHandler());
 
+    this.server.use(helmet());
     this.server.use(express.json());
+
+    if (process.env.NODE_ENV !== 'development') {
+      this.server.use(
+        new RateLimit({
+          store: new RateLimitRedis({
+            client: redis.createClient(redisConfig),
+          }),
+          windowMs: 1000 * 60 * 15,
+          max: 100,
+        })
+      );
+    }
   }
 
   routes() {
