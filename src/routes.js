@@ -25,6 +25,8 @@ const routes = new Router();
 const bruteStore = new BruteRedis(redisConfig);
 const bruteForce = new Brute(bruteStore);
 
+routes.get('/', (req, res) => res.send('OK'));
+
 /**
  * Public routes
  */
