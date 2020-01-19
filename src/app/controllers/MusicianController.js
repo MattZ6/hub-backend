@@ -6,7 +6,7 @@ class MusicianController {
   async index(req, res) {
     const { limit = 10, offset = 0 } = req.query;
 
-    const users = await User.findAll({
+    const _users = await User.findAll({
       attributes: ['id', 'nickname'],
       limit,
       offset,
@@ -26,7 +26,29 @@ class MusicianController {
       ],
     });
 
+    const users = _users.map(user => {
+      return {
+        id: user.id,
+        nickname: user.nickname,
+        skills: user.skills.map(skill => ({
+          id: skill.instrument.id,
+          label: skill.instrument.label,
+          skill_id: skill.id,
+        })),
+      };
+    });
+
     return res.status(200).json(users);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      attributes: ['id', 'nickname', 'name'],
+    });
+
+    return res.status(200).json(user);
   }
 }
 

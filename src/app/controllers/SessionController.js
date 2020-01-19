@@ -12,7 +12,15 @@ class SessionController {
 
     const user = await User.findOne({
       where: where(fn('LOWER', col('email')), fn('LOWER', email)),
-      attributes: ['id', 'name', 'admin', 'password_hash'],
+      attributes: [
+        'id',
+        'name',
+        'nickname',
+        'first_skill_configuration',
+        'admin',
+        'email',
+        'password_hash',
+      ],
     });
 
     if (!user) {
@@ -23,8 +31,17 @@ class SessionController {
       return res.status(422).json({ error: UserMessages.PASSWORD_WRONG });
     }
 
+    const userToReturn = {
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname,
+      first_skill_configuration: user.first_skill_configuration,
+      email: user.email,
+    };
+
     return res.status(201).json({
       access_token: returnToken(user.id, user.admin),
+      user: userToReturn,
     });
   }
 }

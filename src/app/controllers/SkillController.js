@@ -1,5 +1,6 @@
 import Instrument from '../models/Instrument';
 import UserSkill from '../models/UserSkill';
+import User from '../models/User';
 
 class SkillController {
   async index(req, res) {
@@ -122,6 +123,12 @@ class SkillController {
       instrument_id: x.instrumentId,
       skill_level: x.skillLevel,
     }));
+
+    const user = await User.findByPk(req.userId, {
+      attributes: ['id', 'first_skill_configuration'],
+    });
+
+    await user.update({ first_skill_configuration: true });
 
     await Promise.all(skills.map(skill => UserSkill.create(skill)));
 

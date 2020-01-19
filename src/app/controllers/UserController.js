@@ -46,15 +46,18 @@ class UserController {
       });
     }
 
-    const { id, admin } = await User.create({
+    const { id, admin, first_skill_configuration } = await User.create({
       name,
       nickname,
       email,
       password: req.body.password,
     });
 
+    const user = { id, name, nickname, first_skill_configuration, email };
+
     return res.status(201).json({
       access_token: returnToken(id, admin),
+      user,
     });
   }
 
@@ -82,9 +85,21 @@ class UserController {
       return res.status(400).json({ error: UserMessages.OLD_PASSWORD_WRONG });
     }
 
-    await user.update(req.body);
+    const {
+      id,
+      name,
+      nickname,
+      first_skill_configuration,
+      email: updatedEmail,
+    } = await user.update(req.body);
 
-    return res.status(204).json();
+    return res.status(200).json({
+      id,
+      name,
+      nickname,
+      first_skill_configuration,
+      email: updatedEmail,
+    });
   }
 }
 

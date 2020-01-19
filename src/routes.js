@@ -43,7 +43,6 @@ routes.post('/v1/users', validateUserStore, UserController.store);
 
 routes.use(authMiddleware);
 
-routes.get('/v1/users', UserController.show);
 routes.put('/v1/users', UserController.update);
 
 routes.get('/v1/instruments', InstrumentController.index);
@@ -53,6 +52,7 @@ routes.post('/v1/skills', SkillController.store);
 routes.delete('/v1/skills/:id', SkillController.destroy);
 
 routes.get('/v1/musicians', MusicianController.index);
+routes.get('/v1/musicians/:id', MusicianController.show);
 
 routes.get('/v1/styles', StyleController.index);
 
