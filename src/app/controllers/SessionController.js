@@ -17,6 +17,7 @@ class SessionController {
         'name',
         'nickname',
         'first_skill_configuration',
+        'bio',
         'admin',
         'email',
         'password_hash',
@@ -37,6 +38,7 @@ class SessionController {
       nickname: user.nickname,
       first_skill_configuration: user.first_skill_configuration,
       email: user.email,
+      bio: user.bio,
     };
 
     return res.status(201).json({

@@ -9,6 +9,7 @@ import SessionController from './app/controllers/SessionController';
 import InstrumentController from './app/controllers/InstrumentController';
 import SkillController from './app/controllers/SkillController';
 import MusicianController from './app/controllers/MusicianController';
+import MusicianSkillController from './app/controllers/MusicianSkillController';
 import StyleController from './app/controllers/StyleController';
 import UserStylePreferenceController from './app/controllers/UserStylePreferenceController';
 import BandController from './app/controllers/BandController';
@@ -53,6 +54,8 @@ routes.delete('/v1/skills/:id', SkillController.destroy);
 
 routes.get('/v1/musicians', MusicianController.index);
 routes.get('/v1/musicians/:id', MusicianController.show);
+
+routes.get('/v1/musicians/:id/skills', MusicianSkillController.index);
 
 routes.get('/v1/styles', StyleController.index);
 

@@ -12,6 +12,7 @@ class User extends Model {
         password: Sequelize.VIRTUAL,
         password_hash: Sequelize.STRING,
         first_skill_configuration: Sequelize.BOOLEAN,
+        bio: Sequelize.STRING,
       },
       {
         sequelize,

@@ -30,6 +30,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      bio: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
       first_skill_configuration: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
