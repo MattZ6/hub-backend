@@ -17,6 +17,7 @@ class SessionController {
         'name',
         'nickname',
         'first_skill_configuration',
+        'first_styles_configuration',
         'bio',
         'admin',
         'email',
@@ -37,6 +38,7 @@ class SessionController {
       name: user.name,
       nickname: user.nickname,
       first_skill_configuration: user.first_skill_configuration,
+      first_styles_configuration: user.first_styles_configuration,
       email: user.email,
       bio: user.bio,
     };

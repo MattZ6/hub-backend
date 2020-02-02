@@ -46,14 +46,28 @@ class UserController {
       });
     }
 
-    const { id, admin, first_skill_configuration, bio } = await User.create({
+    const {
+      id,
+      admin,
+      first_skill_configuration,
+      first_styles_configuration,
+      bio,
+    } = await User.create({
       name,
       nickname,
       email,
       password: req.body.password,
     });
 
-    const user = { id, name, nickname, first_skill_configuration, email, bio };
+    const user = {
+      id,
+      name,
+      nickname,
+      first_skill_configuration,
+      first_styles_configuration,
+      email,
+      bio,
+    };
 
     return res.status(201).json({
       access_token: returnToken(id, admin),

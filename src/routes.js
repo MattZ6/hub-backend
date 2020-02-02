@@ -36,6 +36,7 @@ routes.post(
   validateSessionStore,
   SessionController.store
 );
+
 routes.post('/v1/users', validateUserStore, UserController.store);
 
 /**
