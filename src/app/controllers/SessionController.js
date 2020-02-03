@@ -5,6 +5,7 @@ import { UserMessages } from '../res/messages';
 import returnToken from '../utils/token';
 
 import User from '../models/User';
+import Region from '../models/Region';
 
 class SessionController {
   async store(req, res) {
@@ -18,10 +19,16 @@ class SessionController {
         'nickname',
         'first_skill_configuration',
         'first_styles_configuration',
-        'bio',
         'admin',
         'email',
         'password_hash',
+      ],
+      include: [
+        {
+          model: Region,
+          as: 'region',
+          attributes: ['id', 'name'],
+        },
       ],
     });
 
@@ -40,7 +47,7 @@ class SessionController {
       first_skill_configuration: user.first_skill_configuration,
       first_styles_configuration: user.first_styles_configuration,
       email: user.email,
-      bio: user.bio,
+      region: user.region,
     };
 
     return res.status(201).json({

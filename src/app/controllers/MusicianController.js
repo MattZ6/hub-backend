@@ -180,7 +180,7 @@ class MusicianController {
     const { id } = req.params;
 
     const user = await User.findByPk(id, {
-      attributes: ['id', 'nickname', 'name', 'bio'],
+      attributes: ['id', 'nickname', 'name'],
     });
 
     return res.status(200).json(user);

@@ -5,6 +5,7 @@ import { UserMessages } from '../res/messages';
 import returnToken from '../utils/token';
 
 import User from '../models/User';
+import Region from '../models/Region';
 
 class UserController {
   async show(req, res) {
@@ -23,6 +24,7 @@ class UserController {
     const name = req.body.name.trim();
     const nickname = req.body.nickname.trim();
     const email = req.body.email.trim();
+    const { regionId } = req.body;
 
     const emailInUse =
       (await User.count({
@@ -46,16 +48,26 @@ class UserController {
       });
     }
 
+    const region = await Region.findByPk(regionId, {
+      attributes: ['id', 'name'],
+    });
+
+    if (!region) {
+      return res.status(404).json({
+        error: 'Você precisa informar uma cidade válida',
+      });
+    }
+
     const {
       id,
       admin,
       first_skill_configuration,
       first_styles_configuration,
-      bio,
     } = await User.create({
       name,
       nickname,
       email,
+      region_id: regionId,
       password: req.body.password,
     });
 
@@ -65,8 +77,8 @@ class UserController {
       nickname,
       first_skill_configuration,
       first_styles_configuration,
+      region,
       email,
-      bio,
     };
 
     return res.status(201).json({
@@ -76,7 +88,7 @@ class UserController {
   }
 
   async update(req, res) {
-    const { email, oldPassword } = req.body;
+    const { email, oldPassword, regionId } = req.body;
 
     const user = await User.findByPk(req.userId);
 
@@ -99,20 +111,38 @@ class UserController {
       return res.status(400).json({ error: UserMessages.OLD_PASSWORD_WRONG });
     }
 
+    if (regionId) {
+      const exists = (await Region.count({ where: { id: regionId } })) === 1;
+
+      if (!exists) {
+        return res.status(404).json({
+          error: 'Você precisa informar uma cidade válida',
+        });
+      }
+    }
+
     const {
       id,
       name,
       nickname,
       first_skill_configuration,
+      first_styles_configuration,
+      region_id,
       email: updatedEmail,
     } = await user.update(req.body);
+
+    const region = await Region.findByPk(region_id, {
+      attributes: ['id', 'name'],
+    });
 
     return res.status(200).json({
       id,
       name,
       nickname,
       first_skill_configuration,
+      first_styles_configuration,
       email: updatedEmail,
+      region,
     });
   }
 }

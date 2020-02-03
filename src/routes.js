@@ -4,6 +4,7 @@ import BruteRedis from 'express-brute-redis';
 
 import redisConfig from './config/redis';
 
+import RegionController from './app/controllers/RegionController';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import InstrumentController from './app/controllers/InstrumentController';
@@ -39,6 +40,8 @@ routes.post(
 
 routes.post('/v1/users', validateUserStore, UserController.store);
 
+routes.post('/v1/regions', RegionController.store);
+
 /**
  * Private routes
  */
@@ -59,6 +62,8 @@ routes.get('/v1/musicians/:id', MusicianController.show);
 routes.get('/v1/musicians/:id/skills', MusicianSkillController.index);
 
 routes.get('/v1/styles', StyleController.index);
+
+routes.get('/v1/regions', RegionController.index);
 
 routes.get('/v1/preferences', UserStylePreferenceController.index);
 routes.post('/v1/preferences', UserStylePreferenceController.store);

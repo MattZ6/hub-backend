@@ -13,7 +13,6 @@ class User extends Model {
         password_hash: Sequelize.STRING,
         first_skill_configuration: Sequelize.BOOLEAN,
         first_styles_configuration: Sequelize.BOOLEAN,
-        bio: Sequelize.STRING,
       },
       {
         sequelize,
@@ -31,6 +30,7 @@ class User extends Model {
   static associate(models) {
     this.hasMany(models.UserSkill, { as: 'skills' });
     this.hasMany(models.UserStylePreference, { as: 'style_preferences' });
+    this.belongsTo(models.Region, { foreignKey: 'region_id', as: 'region' });
   }
 
   checkPassword(password) {

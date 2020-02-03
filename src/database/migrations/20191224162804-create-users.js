@@ -21,6 +21,11 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
+      region_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'regions', key: 'id' },
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -29,11 +34,6 @@ module.exports = {
       password_hash: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      bio: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        defaultValue: null,
       },
       first_skill_configuration: {
         type: Sequelize.BOOLEAN,
