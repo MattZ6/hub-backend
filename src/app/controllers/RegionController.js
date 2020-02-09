@@ -1,7 +1,7 @@
-import { where, fn, col } from 'sequelize';
 import * as Yup from 'yup';
 
 import Region from '../models/Region';
+import createRegion from '../services/createRegion';
 
 class RegionController {
   async index(_, res) {
@@ -25,18 +25,7 @@ class RegionController {
       return res.status(400).json({ error: 'Validation errors.' });
     }
 
-    const name = req.body.name.trim();
-
-    const region = await Region.findOne({
-      where: where(fn('LOWER', col('name')), fn('LOWER', name)),
-      attributes: ['id'],
-    });
-
-    if (region) {
-      return res.json({ id: region.id });
-    }
-
-    const { id } = await Region.create(req.body);
+    const id = await createRegion(req.body.name);
 
     return res.json({ id });
   }

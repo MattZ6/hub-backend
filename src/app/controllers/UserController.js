@@ -3,6 +3,7 @@ import { where, fn, col } from 'sequelize';
 import { UserMessages } from '../res/messages';
 
 import returnToken from '../utils/token';
+import createRegion from '../services/createRegion';
 
 import User from '../models/User';
 import Region from '../models/Region';
@@ -24,7 +25,7 @@ class UserController {
     const name = req.body.name.trim();
     const nickname = req.body.nickname.trim();
     const email = req.body.email.trim();
-    const { regionId } = req.body;
+    const location = req.body.location.trim();
 
     const emailInUse =
       (await User.count({
@@ -48,15 +49,7 @@ class UserController {
       });
     }
 
-    const region = await Region.findByPk(regionId, {
-      attributes: ['id', 'name'],
-    });
-
-    if (!region) {
-      return res.status(404).json({
-        error: 'Você precisa informar uma cidade válida',
-      });
-    }
+    const region = await createRegion(location);
 
     const {
       id,
@@ -67,7 +60,7 @@ class UserController {
       name,
       nickname,
       email,
-      region_id: regionId,
+      region_id: region.id,
       password: req.body.password,
     });
 
