@@ -1,18 +1,38 @@
 import Instrument from '../models/Instrument';
 import UserSkill from '../models/UserSkill';
+import User from '../models/User';
 
 class SkillController {
   async index(req, res) {
-    const skills = await UserSkill.findAll({
+    const _skills = await UserSkill.findAll({
       where: { user_id: req.userId },
       attributes: ['id', 'skill_level'],
       include: [
         {
           model: Instrument,
           as: 'instrument',
-          attributes: ['name', 'label'],
+          attributes: ['label'],
         },
       ],
+    });
+
+    function returnSkillLevel(level) {
+      if (level === 1) {
+        return 'Iniciante';
+      }
+      if (level === 2) {
+        return 'Intermediário';
+      }
+      return 'Profissional';
+    }
+
+    const skills = _skills.map(x => {
+      return {
+        id: x.id,
+        skill_level: x.skill_level,
+        skill_level_label: returnSkillLevel(x.skill_level),
+        instrument_label: x.instrument.label,
+      };
     });
 
     return res.status(200).json(skills);
@@ -122,6 +142,12 @@ class SkillController {
       instrument_id: x.instrumentId,
       skill_level: x.skillLevel,
     }));
+
+    const user = await User.findByPk(req.userId, {
+      attributes: ['id', 'first_skill_configuration'],
+    });
+
+    await user.update({ first_skill_configuration: true });
 
     await Promise.all(skills.map(skill => UserSkill.create(skill)));
 

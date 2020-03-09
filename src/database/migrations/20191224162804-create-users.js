@@ -21,6 +21,11 @@ module.exports = {
         allowNull: false,
         defaultValue: false,
       },
+      region_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'regions', key: 'id' },
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -29,6 +34,20 @@ module.exports = {
       password_hash: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      whatsapp: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      first_skill_configuration: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      first_styles_configuration: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       created_at: {
         type: Sequelize.DATE,

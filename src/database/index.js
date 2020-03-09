@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 
+import Region from '../app/models/Region';
 import User from '../app/models/User';
 import Instrument from '../app/models/Instrument';
 import UserSkill from '../app/models/UserSkill';
@@ -12,6 +13,7 @@ import BandMember from '../app/models/BandMember';
 import databaseConfig from '../config/database';
 
 const models = [
+  Region,
   User,
   Instrument,
   UserSkill,

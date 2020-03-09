@@ -5,6 +5,7 @@ import { UserMessages } from '../res/messages';
 import returnToken from '../utils/token';
 
 import User from '../models/User';
+import Region from '../models/Region';
 
 class SessionController {
   async store(req, res) {
@@ -12,7 +13,23 @@ class SessionController {
 
     const user = await User.findOne({
       where: where(fn('LOWER', col('email')), fn('LOWER', email)),
-      attributes: ['id', 'name', 'admin', 'password_hash'],
+      attributes: [
+        'id',
+        'name',
+        'nickname',
+        'first_skill_configuration',
+        'first_styles_configuration',
+        'admin',
+        'email',
+        'password_hash',
+      ],
+      include: [
+        {
+          model: Region,
+          as: 'region',
+          attributes: ['id', 'name'],
+        },
+      ],
     });
 
     if (!user) {
@@ -23,8 +40,19 @@ class SessionController {
       return res.status(422).json({ error: UserMessages.PASSWORD_WRONG });
     }
 
+    const userToReturn = {
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname,
+      first_skill_configuration: user.first_skill_configuration,
+      first_styles_configuration: user.first_styles_configuration,
+      email: user.email,
+      region: user.region,
+    };
+
     return res.status(201).json({
       access_token: returnToken(user.id, user.admin),
+      user: userToReturn,
     });
   }
 }

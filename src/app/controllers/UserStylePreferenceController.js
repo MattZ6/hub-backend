@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import * as Yup from 'yup';
 
+import User from '../models/User';
 import MusicStyle from '../models/MusicStyle';
 import UserStylePreference from '../models/UserStylePreference';
 
@@ -62,6 +63,10 @@ class UserStylePreferenceController {
       return res
         .status(422)
         .json({ error: "You're already has this preferences" });
+
+    const user = await User.findByPk(req.userId);
+
+    await user.update({ first_styles_configuration: true });
 
     const preferences = preferencesToSave.map(x => ({
       user_id: req.userId,
