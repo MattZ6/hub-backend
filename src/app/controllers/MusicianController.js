@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Region from '../models/Region';
 
 class MusicianController {
   async index(req, res) {
@@ -9,6 +10,7 @@ class MusicianController {
       styles = null,
       skills = null,
       levels = null,
+      regions = null,
       limit = 10,
       offset = 0,
       search = null,
@@ -17,6 +19,21 @@ class MusicianController {
     let styleIds = [];
     let instrumentIds = [];
     let skillLevels = [];
+    let regionIds = [];
+
+    if (regions) {
+      const _regionsAux = (Array.isArray(regions)
+        ? regions
+        : [regions]
+      ).filter(x => x.trim());
+
+      if (_regionsAux.map(x => Number(x)).some(x => !onlyNumberRegex.test(x)))
+        return res
+          .status(400)
+          .json({ error: 'O id da cidade deve ser um número' });
+
+      regionIds = [..._regionsAux];
+    }
 
     if (styles) {
       const _stylesAux = (Array.isArray(styles) ? styles : [styles]).filter(x =>
@@ -71,6 +88,7 @@ class MusicianController {
       SELECT
           Users.id AS id,
           Users.name AS name,
+          Users.nickname AS nickname,
           visible_skills.label AS skills
       FROM Users
       LEFT JOIN (
@@ -87,7 +105,7 @@ class MusicianController {
       `;
     }
 
-    if (instrumentIds.length > 0) {
+    if (instrumentIds.length > 0 || skillLevels.length > 0) {
       _query += `
         LEFT JOIN User_Skills ON User_Skills.user_id = Users.id
         LEFT JOIN Instruments ON Instruments.id = User_Skills.instrument_id
@@ -100,12 +118,20 @@ class MusicianController {
         ? `AND Music_Styles.id IN (${styleIds.join(',')})`
         : ''
     } ${
+      regionIds.length > 0
+        ? `AND Users.region_id IN (${regionIds.join(',')})`
+        : ''
+    } ${
       instrumentIds.length > 0
         ? `AND Instruments.id IN (${instrumentIds.join(',')})`
         : ''
     } ${
       skillLevels.length > 0
         ? `AND User_Skills.skill_level IN (${skillLevels.join(',')})`
+        : ''
+    } ${
+      search
+        ? `\nAND (LOWER(Users.name) LIKE LOWER('%${search}%') OR LOWER(Users.nickname) LIKE LOWER('%${search}%'))`
         : ''
     }
     `;
@@ -140,47 +166,20 @@ class MusicianController {
     });
 
     return res.status(200).json(users);
-
-    // let query = `
-    //             SELECT
-    //               Users.id AS id,
-    //               Users.name AS name,
-    //               string_agg(Instruments.label, ', ') AS skills
-    //             FROM Users
-    //             LEFT OUTER JOIN User_Skills ON User_Skills.user_id = Users.id
-    //             LEFT OUTER JOIN Instruments ON Instruments.id = User_Skills.instrument_id
-    //             WHERE Users.id != ${req.userId}
-    //             `;
-
-    // if (search && search.trim().length > 0) {
-    //   const words = search.toLowerCase().split(' ');
-
-    //   query += ' AND ( ';
-
-    //   words.forEach((word, i) => {
-    //     query += `
-    //           ( LOWER(Users.name) LIKE '%${word}%' OR LOWER(Instruments.label) LIKE '%${word}%' OR LOWER(Instruments.name) LIKE '%${word}%' ) ${
-    //       i < words.length - 1 ? 'AND' : ''
-    //     }
-    //     `;
-    //   });
-
-    //   query += ' ) ';
-    // }
-
-    // query += `
-    //           GROUP BY Users.id, Users.name
-    //           ORDER BY Users.name
-    //           LIMIT ${limit}
-    //           OFFSET ${offset}
-    //           `;
   }
 
   async show(req, res) {
     const { id } = req.params;
 
     const user = await User.findByPk(id, {
-      attributes: ['id', 'nickname', 'name'],
+      attributes: ['id', 'nickname', 'name', 'whatsapp'],
+      include: [
+        {
+          model: Region,
+          as: 'region',
+          attributes: ['name'],
+        },
+      ],
     });
 
     return res.status(200).json(user);

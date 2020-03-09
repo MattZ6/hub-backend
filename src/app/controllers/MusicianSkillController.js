@@ -8,6 +8,7 @@ class MusicianSkillController {
     const _skills = await UserSkill.findAll({
       where: { user_id },
       attributes: ['id', 'skill_level'],
+      order: [['skill_level', 'DESC']],
       include: [
         {
           model: Instrument,
@@ -21,9 +22,11 @@ class MusicianSkillController {
       if (level === 1) {
         return 'Iniciante';
       }
+
       if (level === 2) {
         return 'Intermediário';
       }
+
       return 'Profissional';
     }
 

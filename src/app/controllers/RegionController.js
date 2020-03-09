@@ -25,9 +25,9 @@ class RegionController {
       return res.status(400).json({ error: 'Validation errors.' });
     }
 
-    const id = await createRegion(req.body.name);
+    const region = await createRegion(req.body.name);
 
-    return res.json({ id });
+    return res.json(region);
   }
 }
 

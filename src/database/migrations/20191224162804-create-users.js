@@ -35,6 +35,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      whatsapp: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       first_skill_configuration: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

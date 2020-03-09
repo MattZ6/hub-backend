@@ -11,6 +11,7 @@ import InstrumentController from './app/controllers/InstrumentController';
 import SkillController from './app/controllers/SkillController';
 import MusicianController from './app/controllers/MusicianController';
 import MusicianSkillController from './app/controllers/MusicianSkillController';
+import MusicianStylePreferenceController from './app/controllers/MusicianStylePreferenceController';
 import StyleController from './app/controllers/StyleController';
 import UserStylePreferenceController from './app/controllers/UserStylePreferenceController';
 import BandController from './app/controllers/BandController';
@@ -30,6 +31,10 @@ const bruteForce = new Brute(bruteStore);
 /**
  * Public routes
  */
+
+// Test route
+
+routes.get('/test', (req, res) => res.json({ message: '👋🏻🌎' }));
 
 routes.post(
   '/v1/sessions',
@@ -60,6 +65,8 @@ routes.get('/v1/musicians', MusicianController.index);
 routes.get('/v1/musicians/:id', MusicianController.show);
 
 routes.get('/v1/musicians/:id/skills', MusicianSkillController.index);
+
+routes.get('/v1/musicians/:id/styles', MusicianStylePreferenceController.index);
 
 routes.get('/v1/styles', StyleController.index);
 

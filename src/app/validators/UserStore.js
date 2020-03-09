@@ -5,10 +5,10 @@ import { UserMessages, VALIDATION_FAILS } from '../res/messages';
 export default async (req, res, next) => {
   try {
     const schema = Yup.object().shape({
-      location: Yup.string()
-        .required('A cidade é obrigatória')
-        .trim()
-        .min(6, 'A cidade precisa de no mínimo 6 caracteres'),
+      // location: Yup.string()
+      //   .required('A cidade é obrigatória')
+      //   .trim()
+      //   .min(6, 'A cidade precisa de no mínimo 6 caracteres'),
       passwordConfirmation: Yup.string()
         .required(UserMessages.PASSWORD_CONFIRMATION_REQUIRED)
         .oneOf(
