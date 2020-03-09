@@ -28,6 +28,8 @@ const routes = new Router();
 const bruteStore = new BruteRedis(redisConfig);
 const bruteForce = new Brute(bruteStore);
 
+routes.get('/test', (req, res) => res.json({ message: '👋🏻🌎' }));
+
 /**
  * Public routes
  */
