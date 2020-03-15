@@ -2,6 +2,7 @@ import Sequelize from 'sequelize';
 
 import Region from '../app/models/Region';
 import User from '../app/models/User';
+import Avatar from '../app/models/Avatar';
 import Instrument from '../app/models/Instrument';
 import UserSkill from '../app/models/UserSkill';
 import MusicStyle from '../app/models/MusicStyle';
@@ -15,6 +16,7 @@ import databaseConfig from '../config/database';
 const models = [
   Region,
   User,
+  Avatar,
   Instrument,
   UserSkill,
   MusicStyle,

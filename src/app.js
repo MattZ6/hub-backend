@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import redis from 'redis';
 import RateLimit from 'express-rate-limit';
 import RateLimitRedis from 'rate-limit-redis';
-// import path from 'path';
+import path from 'path';
 // import Youch from 'youch';
 // import * as Sentry from '@sentry/node';
 
@@ -34,6 +34,10 @@ class App {
 
     this.server.use(helmet());
     this.server.use(express.json());
+    this.server.use(
+      '/files',
+      express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
+    );
 
     if (process.env.NODE_ENV !== 'development') {
       this.server.use(

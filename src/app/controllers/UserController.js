@@ -7,6 +7,7 @@ import returnToken from '../utils/token';
 
 import User from '../models/User';
 import Region from '../models/Region';
+import Avatar from '../models/Avatar';
 
 class UserController {
   async store(req, res) {
@@ -59,6 +60,11 @@ class UserController {
       password: req.body.password,
     });
 
+    const avatar = await Avatar.findOne({
+      where: { user_id: id },
+      attributes: ['id', 'name', 'url'],
+    });
+
     const user = {
       id,
       name,
@@ -68,6 +74,7 @@ class UserController {
       first_skill_configuration,
       first_styles_configuration,
       region,
+      avatar,
     };
 
     return res.status(201).json({
@@ -152,6 +159,11 @@ class UserController {
 
     const _updatedUser = await user.update(userToUpdate);
 
+    const avatar = await Avatar.findOne({
+      where: { user_id: user.id },
+      attributes: ['id', 'name', 'url'],
+    });
+
     return res.status(200).json({
       id: _updatedUser.id,
       name: _updatedUser.name,
@@ -161,6 +173,7 @@ class UserController {
       first_styles_configuration: _updatedUser.first_styles_configuration,
       whatsapp: _updatedUser.whatsapp,
       region,
+      avatar,
     });
   }
 }

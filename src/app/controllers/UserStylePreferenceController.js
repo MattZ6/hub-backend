@@ -36,12 +36,12 @@ class UserStylePreferenceController {
      * MusicStyle
      */
 
-    const invalidStyle =
-      (await MusicStyle.count({
-        where: { id: { [Op.in]: styles } },
-      })) !== styles.length;
+    const musicStyles = await MusicStyle.findAll({
+      where: { id: { [Op.in]: styles } },
+      attributes: ['id', 'name'],
+    });
 
-    if (invalidStyle)
+    if (musicStyles.length === 0)
       return res.status(404).json({ error: 'Music style not found' });
 
     /**
@@ -73,11 +73,16 @@ class UserStylePreferenceController {
       music_style_id: x,
     }));
 
-    await Promise.all(
+    const _preferences = await Promise.all(
       preferences.map(preference => UserStylePreference.create(preference))
     );
 
-    return res.status(201).json();
+    const newUserPreferences = _preferences.map(p => ({
+      id: p.id,
+      style: musicStyles.find(m => m.id === p.music_style_id),
+    }));
+
+    return res.status(201).json(newUserPreferences);
   }
 
   async destroy(req, res) {
