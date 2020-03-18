@@ -68,6 +68,7 @@ routes.get('/v1/instruments', InstrumentController.index);
 
 routes.get('/v1/skills', SkillController.index);
 routes.post('/v1/skills', SkillController.store);
+routes.put('/v1/skills/:id', SkillController.update);
 routes.delete('/v1/skills/:id', SkillController.destroy);
 
 routes.get('/v1/musicians', MusicianController.index);

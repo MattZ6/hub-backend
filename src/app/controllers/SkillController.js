@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import Instrument from '../models/Instrument';
 import UserSkill from '../models/UserSkill';
 import User from '../models/User';
@@ -23,7 +25,7 @@ class SkillController {
       if (level === 2) {
         return 'Intermediário';
       }
-      return 'Profissional';
+      return 'Avançado';
     }
 
     const skills = _skills.map(x => {
@@ -149,9 +151,59 @@ class SkillController {
 
     await user.update({ first_skill_configuration: true });
 
-    await Promise.all(skills.map(skill => UserSkill.create(skill)));
+    const newSkills = await Promise.all(
+      skills.map(skill => UserSkill.create(skill))
+    );
 
-    return res.status(204).json();
+    const ids = newSkills.map(x => x.id);
+
+    const skillsToReturn = await UserSkill.findAll({
+      where: { id: { [Op.in]: ids } },
+      attributes: ['id', 'skill_level', 'skill_level_label'],
+      include: [
+        {
+          model: Instrument,
+          as: 'instrument',
+          attributes: ['label'],
+        },
+      ],
+    }).map(x => ({
+      id: x.id,
+      skill_level: x.skill_level,
+      skill_level_label: x.skill_level_label,
+      instrument_label: x.instrument.label,
+    }));
+
+    return res.status(201).json(skillsToReturn);
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+    const { level: skill_level } = req.body;
+    const { userId } = req;
+
+    const skill = await UserSkill.findByPk(id, {
+      include: [
+        {
+          model: Instrument,
+          as: 'instrument',
+          attributes: ['label'],
+        },
+      ],
+    });
+
+    if (!skill || skill.user_id !== userId) {
+      return res.status(404).json({ message: 'Habilidade não ecnontrada' });
+    }
+
+    await skill.update({ skill_level });
+
+    return res.status(200).json({
+      id: skill.id,
+      skill_level,
+      skill_level_label: skill.skill_level_label,
+      instrument_label: skill.instrument.label,
+    });
   }
 
   async destroy(req, res) {

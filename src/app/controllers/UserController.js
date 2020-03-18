@@ -149,8 +149,14 @@ class UserController {
       userToUpdate.region_id = req.body.regionId;
     }
 
+    // console.log(req.body.whatsapp);
+
     if (req.body.whatsapp) {
       userToUpdate.whatsapp = req.body.whatsapp;
+    }
+
+    if (req.body.removeWhatsApp) {
+      userToUpdate.whatsapp = null;
     }
 
     if (req.body.passwordConfirmation) {

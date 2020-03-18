@@ -33,7 +33,7 @@ class App {
     // this.server.use(Sentry.Handlers.requestHandler());
 
     this.server.use(helmet());
-    this.server.use(express.json());
+    this.server.use(express.json({ limit: '12Mb' }));
     this.server.use(
       '/files',
       express.static(path.resolve(__dirname, '..', 'tmp', 'uploads'))
