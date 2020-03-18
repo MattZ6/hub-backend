@@ -1,11 +1,14 @@
 import { Router } from 'express';
+// import multer from 'multer';
 import Brute from 'express-brute';
 import BruteRedis from 'express-brute-redis';
+// import multerConfig from './config/multer';
 
 import redisConfig from './config/redis';
 
 import RegionController from './app/controllers/RegionController';
 import UserController from './app/controllers/UserController';
+import AvatarController from './app/controllers/AvatarController';
 import SessionController from './app/controllers/SessionController';
 import InstrumentController from './app/controllers/InstrumentController';
 import SkillController from './app/controllers/SkillController';
@@ -55,12 +58,17 @@ routes.post('/v1/regions', RegionController.store);
 
 routes.use(authMiddleware);
 
+// const upload = multer(multerConfig);
+
+routes.post('/v1/avatar', AvatarController.store);
+
 routes.put('/v1/users', UserController.update);
 
 routes.get('/v1/instruments', InstrumentController.index);
 
 routes.get('/v1/skills', SkillController.index);
 routes.post('/v1/skills', SkillController.store);
+routes.put('/v1/skills/:id', SkillController.update);
 routes.delete('/v1/skills/:id', SkillController.destroy);
 
 routes.get('/v1/musicians', MusicianController.index);

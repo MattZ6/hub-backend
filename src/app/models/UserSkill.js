@@ -5,6 +5,20 @@ class UserSkill extends Model {
     super.init(
       {
         skill_level: DataTypes.TINYINT,
+        skill_level_label: {
+          type: DataTypes.VIRTUAL,
+          get() {
+            if (this.skill_level === 1) {
+              return 'Iniciante';
+            }
+
+            if (this.skill_level === 2) {
+              return 'Intermediário';
+            }
+
+            return 'Avançado';
+          },
+        },
       },
       {
         sequelize,

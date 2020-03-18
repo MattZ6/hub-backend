@@ -1,5 +1,8 @@
 import User from '../models/User';
 import Region from '../models/Region';
+import Avatar from '../models/Avatar';
+
+import getAvatarUrl from '../services/getAvatarUrl';
 
 class MusicianController {
   async index(req, res) {
@@ -89,8 +92,10 @@ class MusicianController {
           Users.id AS id,
           Users.name AS name,
           Users.nickname AS nickname,
-          visible_skills.label AS skills
+          visible_skills.label AS skills,
+          Avatars.name AS avatar_url
       FROM Users
+      LEFT JOIN Avatars ON Avatars.user_id = Users.id
       LEFT JOIN (
           SELECT User_Skills.user_id, string_agg(instruments.label, ', ' ORDER BY instruments.label) AS label
           FROM User_Skills
@@ -137,7 +142,7 @@ class MusicianController {
     `;
 
     _query += `
-      GROUP BY Users.id, visible_skills.label
+      GROUP BY Users.id, visible_skills.label, avatar_url
       ORDER BY Users.name
       LIMIT ${limitValue}
       OFFSET ${offsetValue}
@@ -162,6 +167,10 @@ class MusicianController {
           .toUpperCase()}${formatedSkills.substr(1)}`;
       }
 
+      if (x.avatar_url) {
+        x.avatar_url = getAvatarUrl(x.avatar_url);
+      }
+
       return x;
     });
 
@@ -178,6 +187,11 @@ class MusicianController {
           model: Region,
           as: 'region',
           attributes: ['name'],
+        },
+        {
+          model: Avatar,
+          as: 'avatar',
+          attributes: ['id', 'name', 'url'],
         },
       ],
     });

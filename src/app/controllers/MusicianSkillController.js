@@ -27,7 +27,7 @@ class MusicianSkillController {
         return 'Intermediário';
       }
 
-      return 'Profissional';
+      return 'Avançado';
     }
 
     const skills = _skills.map(x => {

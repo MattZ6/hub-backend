@@ -25,6 +25,7 @@ class User extends Model {
         user.password_hash = await hash(user.password, 10);
       }
     });
+
     return this;
   }
 
@@ -32,6 +33,7 @@ class User extends Model {
     this.hasMany(models.UserSkill, { as: 'skills' });
     this.hasMany(models.UserStylePreference, { as: 'style_preferences' });
     this.belongsTo(models.Region, { foreignKey: 'region_id', as: 'region' });
+    this.belongsTo(models.Avatar, { foreignKey: 'avatar_id', as: 'avatar' });
   }
 
   checkPassword(password) {

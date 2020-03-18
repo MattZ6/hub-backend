@@ -6,6 +6,7 @@ import returnToken from '../utils/token';
 
 import User from '../models/User';
 import Region from '../models/Region';
+import Avatar from '../models/Avatar';
 
 class SessionController {
   async store(req, res) {
@@ -29,6 +30,11 @@ class SessionController {
           as: 'region',
           attributes: ['id', 'name'],
         },
+        {
+          model: Avatar,
+          as: 'avatar',
+          attributes: ['id', 'name', 'url'],
+        },
       ],
     });
 
@@ -48,6 +54,7 @@ class SessionController {
       first_styles_configuration: user.first_styles_configuration,
       email: user.email,
       region: user.region,
+      avatar: user.avatar,
     };
 
     return res.status(201).json({
